@@ -31,11 +31,13 @@ do
     OUIS+=("${OUI_b16}")
 done
 # Now we return our count and lists
-echo $COUNT
+echo Clients: $COUNT
 for (( i=0; i<${COUNT}; i++)); do
-    # We obfuscate the MAC
-    STA=$(echo "${STAS[$i]}" | /bin/sed -e 's/\(.\{9\}\)\(.\{5\}\)/\1xx:xx/')
-    echo "${STA} | ${IDS[$i]} | ${OUIS[$i]} | ${CONNTIMES[$i]}"
+    echo "${STAS[$i]} | ${IDS[$i]} | ${OUIS[$i]} | ${CONNTIMES[$i]}"
 done
-exit
+
+if [ "$COUNT" -eq "0" ]; then   
+   exit 1;
+fi
+exit 0;
 
