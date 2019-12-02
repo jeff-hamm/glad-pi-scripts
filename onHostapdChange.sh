@@ -1,30 +1,25 @@
 #!/bin/bash
-echo_time() {
-    date +"%H:%M $(printf "%s " "$@" | sed 's/%/%%/g')"
-}
+GLAD_PI_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+. "$GLAD_PI_DIR/vars.sh"
 
 toggleWifi() {
-	if . "GLAD_PI_DIR/wapsurvey.sh"; then
-		echo_time "Turning on Wifi"
-		echo "1" > /sys/class/gpio/gpio"$WIFI_RELAY_PIN"/value
-	else
-		echo_time "Turning off Wifi"
-		echo "0" > /sys/class/gpio/gpio"$WIFI_RELAY_PIN"/value	
-	fi
+"$GLAD_PI_DIR/toggle-wifi.sh"
 }
 
 if [ $# -eq 0 ]
   then
-    toggleWifi()
+    echo_time "Checking wifi state on startup"
+    toggleWifi
 fi
+
 if [[ $2 == "AP-STA-CONNECTED" ]]
 then
   echo_time "new connection mac id $3 on $1"
-  toggleWifi()
+  toggleWifi
 fi
 
 if [[ $2 == "AP-STA-DISCONNECTED" ]]
 then
   echo_time "disconnection with mac id $3 on $1"
-  toggleWifi()
+  toggleWifi
 fi
